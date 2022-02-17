@@ -1,0 +1,43 @@
+version: '3'
+services:
+  # Elasticsearch Cluster
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:$ELASTIC_VERSION
+    container_name: elasticsearch
+    environment:
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+    restart: always
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - fscrawler_net
+
+  # FSCrawler
+  fscrawler:
+    image: dadoonet/fscrawler:$FSCRAWLER_VERSION
+    container_name: fscrawler
+    restart: always
+    volumes:
+      - ${PWD}/config:/root/.fscrawler
+      - ${PWD}/logs:/usr/share/fscrawler/logs
+      - ../../test-documents/src/main/resources/documents/:/tmp/es:ro
+    depends_on:
+      - elasticsearch
+    command: fscrawler --rest idx
+    networks:
+      - fscrawler_net
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  fscrawler_net:
+    driver: bridge

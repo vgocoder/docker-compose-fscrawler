@@ -1,0 +1,4 @@
+name: "job_name"
+elasticsearch:
+  nodes:
+  - url: "http://elasticsearch:9200"

@@ -1,0 +1,3 @@
+# fscrawler
+export ELASTIC_VERSION=7.17.0
+export FSCRAWLER_VERSION=2.10-SNAPSHOT-ocr-es6
